@@ -1,0 +1,15 @@
+<div class="upper">
+<a href="/new" class="button">メモ追加</a>
+</div>
+
+<div class="ul-align-center">
+<ul>
+<% unless @memos.nil? %>
+  <% @memos.each do |id, memo| %>
+    <li>
+      <a href="/memos/<%= hattr id %>"><%= h memo["title"] %></a>
+    </li>
+  <% end %>
+<% end %>
+</ul>
+</div>
