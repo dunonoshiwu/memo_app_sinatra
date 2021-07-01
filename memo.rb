@@ -17,13 +17,13 @@ helpers do
   end
 
   def load_file
-    File.open('public/memos.json') do |file|
-      JSON.parse(file.read)
-    end
+    json_file = File.open('memos.json').read
+    json_file = '{}' if json_file.empty?
+    JSON.parse(json_file)
   end
 
   def write_file(hash)
-    File.open('public/memos.json', 'w') do |file|
+    File.open('memos.json', 'w') do |file|
       JSON.dump(hash, file)
     end
   end
@@ -53,8 +53,13 @@ get '/edit/:id' do
   @title = 'メモ編集'
   @memo_id = params[:id]
   @memos = load_file
-  @memo = @memos[@memo_id.to_s]
-  erb :edit
+  if @memos.key?(params[:id].to_s)
+    @memo = @memos[params[:id].to_s]
+    erb :edit
+  else
+    @error = '存在するIDを指定してください'
+    erb :top
+  end
 end
 
 patch '/edit/:id' do
@@ -67,21 +72,27 @@ patch '/edit/:id' do
   redirect to("/memos/#{params[:id]}")
 end
 
-delete '/destroy/*' do |id|
+delete '/destroy/:id' do
   hash = load_file
-  hash.delete(id.to_s)
+  hash.delete(params[:id].to_s)
   write_file(hash)
   redirect to('/')
 end
 
-get '/memos/*' do |memo_id|
+get '/memos/:id' do
   @title = 'メモ詳細'
   @memos = load_file
-  @memo_id = memo_id
-  erb :show
+  @memo_id = params[:id].to_s
+  if @memos.key?(params[:id].to_s)
+    @memo = @memos[params[:id].to_s]
+    erb :show
+  else
+    @error = '存在するIDを指定してください'
+    erb :top
+  end
 end
 
 not_found do
   status 404
-  'Not Found 40432'
+  'Not Found 404'
 end

@@ -14,8 +14,13 @@ body{
 
 header{
   text-align: center;
-  color:white;
-  border: 1px solid black;
+}
+
+.error {
+  color: white;
+  background-color: black;
+  display: block;
+  text-align: center;
 }
 
 .upper {
