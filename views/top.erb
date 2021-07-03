@@ -4,9 +4,9 @@
 
 <div class="ul-align-center">
   <ul>
-    <% @memos&.each do |id, memo| %>
+    <% @memos.each do |memo| %>
     <li>
-      <a href="/memos/<%= hattr id %>"><%= h memo["title"] %></a>
+      <a href="/memos/<%= hattr memo['id'] %>"><%= h memo['title'] %></a>
     </li>
     <% end %>
   </ul>

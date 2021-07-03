@@ -2,8 +2,8 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
 require 'securerandom'
+require 'pg'
 
 enable :method_override
 
@@ -15,23 +15,52 @@ helpers do
   def hattr(text)
     Rack::Utils.escape_path(text)
   end
+end
 
-  def load_file
-    json_file = File.open('memos.json').read
-    json_file = '{}' if json_file.empty?
-    JSON.parse(json_file)
+# CRUD memos class
+class Memo
+  def self.all
+    memos_db = []
+    conn = PG.connect(dbname: 'sinatra_memo_app')
+    conn.exec('SELECT * FROM memos;') do |result|
+      result.each do |row|
+        memos_db << row
+      end
+    end
+    memos_db
   end
 
-  def write_file(hash)
-    File.open('memos.json', 'w') do |file|
-      JSON.dump(hash, file)
+  def self.create(title: params_title, content: params_content)
+    id = SecureRandom.uuid
+    conn = PG.connect(dbname: 'sinatra_memo_app')
+    conn.exec("INSERT INTO memos VALUES ('#{id}', '#{title}', '#{content}');")
+  end
+
+  def self.find(id: params_id)
+    target_memo = {}
+    conn = PG.connect(dbname: 'sinatra_memo_app')
+    conn.exec("SELECT * FROM memos WHERE id = '#{id}';") do |result|
+      result.each do |row|
+        target_memo = row
+      end
     end
+    target_memo
+  end
+
+  def self.edit(id: params_id, title: params_id, content: params_content)
+    conn = PG.connect(dbname: 'sinatra_memo_app')
+    conn.exec("UPDATE memos SET title = '#{title}', content = '#{content}' WHERE id = '#{id}';")
+  end
+
+  def self.destroy(id: params_id)
+    conn = PG.connect(dbname: 'sinatra_memo_app')
+    conn.exec("DELETE FROM memos WHERE id = '#{id}';")
   end
 end
 
 get '/' do
   @title = 'トップページ'
-  @memos = load_file
+  @memos = Memo.all
   erb :top
 end
 
@@ -41,55 +70,32 @@ get '/new' do
 end
 
 post '/create' do
-  id = SecureRandom.uuid
-  new_memo = { 'title': params[:title].to_s, 'content': params[:content].to_s }
-  hash = load_file
-  hash[id.to_s] = new_memo
-  write_file(hash)
+  Memo.create(title: params[:title].to_s, content: params[:content].to_s)
   redirect to('/')
 end
 
 get '/edit/:id' do
   @title = 'メモ編集'
-  @memo_id = params[:id]
-  @memos = load_file
-  if @memos.key?(params[:id].to_s)
-    @memo = @memos[params[:id].to_s]
-    erb :edit
-  else
-    @error = '存在するIDを指定してください'
-    erb :top
-  end
+  @memo = Memo.find(id: params[:id])
+  status 404 if @memo.empty?
+  erb :edit
 end
 
 patch '/edit/:id' do
-  @title = params[:title]
-  @content = params[:content]
-  hash = load_file
-  hash[params[:id].to_s]['title'] = params[:title]
-  hash[params[:id].to_s]['content'] = params[:content]
-  write_file(hash)
+  Memo.edit(id: params[:id].to_s, title: params[:title].to_s, content: params[:content].to_s)
   redirect to("/memos/#{params[:id]}")
 end
 
 delete '/destroy/:id' do
-  hash = load_file
-  hash.delete(params[:id].to_s)
-  write_file(hash)
+  Memo.destroy(id: params[:id].to_s)
   redirect to('/')
 end
 
 get '/memos/:id' do
   @title = 'メモ詳細'
-  @memos = load_file
-  @memo_id = params[:id].to_s
-  if @memos.key?(params[:id].to_s)
-    @memo = @memos[params[:id].to_s]
-    erb :show
-  else
-    @error = '存在するIDを指定してください'
-    erb :top
-  end
+  @memo = Memo.find(id: params[:id].to_s)
+  status 404 if @memo.empty?
+  erb :show
 end
 
 not_found do
