@@ -1,0 +1,18 @@
+<% memo = @memos[@memo_id] %>
+
+<span>タイトル</span>
+<div class="title"><%= h memo["title"] %></div>
+
+
+<span>内容</span>
+<div class="content"><%= h memo["content"] %></div>
+
+
+<div class="button_wrapper">
+<a href="/edit/<%= @memo_id %>" class="button">変更</a>
+
+<form action="/destroy/<%=@memo_id%>" method="post">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="submit" value="削除" class="button delete_button">
+</form>
+</div>

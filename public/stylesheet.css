@@ -1,0 +1,110 @@
+body{
+  background-color:darkgoldenrod;
+}
+.container {
+  background-color: whitesmoke;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  border-radius: 0.8em;
+  padding-right: 50px;
+  padding-left: 50px;
+  padding-bottom: 50px;
+}
+
+header{
+  text-align: center;
+}
+
+.error {
+  color: white;
+  background-color: black;
+  display: block;
+  text-align: center;
+}
+
+.upper {
+  text-align: center;
+}
+
+.button {
+  display       : inline-block;
+  border-radius : 0.5em;
+  font-size     : 10pt;
+  text-align    : center;
+  padding       : 12px 12px;
+  background    : #57575c;
+  color         : #ffffff;
+  text-decoration: none;
+  border: 1px solid black;
+}
+
+ul{
+  list-style: disc;
+  padding-left: 15px;
+}
+.ul-align-center {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.button_wrapper {
+  display: flex;
+  width: 100%;
+  text-align: center;
+  justify-content: space-around;
+}
+
+.button_wrapper a {
+  width:49%;
+}
+
+.button_wrapper form {
+  width:50%;
+}
+
+.delete_button {
+  width: 98%;
+}
+
+.title{
+  text-align: center;
+  display: block;
+  border: 1px solid black;
+  border-radius: 0.4em;
+  margin-bottom: 10px;
+}
+span{
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.content {
+  text-align: center;
+  display: block;
+  border: 1px solid black;
+  border-radius: 0.4em;
+  margin-bottom: 10px;
+}
+.form{
+  text-align: center;
+}
+
+.form_input{
+  display: block;
+  text-align: center;
+}
+
+.form_textarea{
+  text-align: center;
+}
+
+.edit_button{
+  text-align: center;
+}
