@@ -27,7 +27,7 @@ $ bundle install
 $ bundle exec ruby memo.rb
 ```
 ブラウザで下記のURLを開きます
-http://localhost:4567/
+[http://localhost:4567](http://localhost:4567)へアクセスする
 # 使い方
 `メモ追加`ボタンでメモを新規作成します
 `変更`ボタンで既存のメモの編集をします
