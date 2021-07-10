@@ -9,9 +9,9 @@
 
 
 <div class="button_wrapper">
-<a href="/edit/<%= @memo['id'] %>" class="button">変更</a>
+<a href="/memos/<%= @memo['id'] %>/edit" class="button">変更</a>
 
-<form action="/destroy/<%=@memo['id']%>" method="post">
+<form action="/memos/<%=@memo['id']%>" method="post">
     <input type="hidden" name="_method" value="DELETE">
     <input type="submit" value="削除" class="button delete_button">
 </form>

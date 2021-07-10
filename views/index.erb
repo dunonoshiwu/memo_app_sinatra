@@ -1,12 +1,12 @@
 <div class="upper">
-  <a href="/new" class="button">メモ追加</a>
+  <a href="/memos/new" class="button">メモ追加</a>
 </div>
 
 <div class="ul-align-center">
   <ul>
     <% @memos.each do |memo| %>
     <li>
-      <a href="/memos/<%= hattr memo['id'] %>"><%= h memo['title'] %></a>
+      <a href="/memos/<%= memo['id'] %>"><%= h memo['title'] %></a>
     </li>
     <% end %>
   </ul>
